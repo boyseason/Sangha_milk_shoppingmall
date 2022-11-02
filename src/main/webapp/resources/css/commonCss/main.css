@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+._1bijXwxRam._26gVNSMpdB ._2txbrXXlXM:nth-child(4n+1), ._1bijXwxRam._2ys1d7ECuG ._2txbrXXlXM:nth-child(5n+1) {
+    clear: left;
+}
+
+._1bijXwxRam._2ys1d7ECuG ._2txbrXXlXM {
+    width: 20%;
+    padding: 0 15px;
+}
+._1bijXwxRam ._2txbrXXlXM {
+    position: relative;
+    float: left;
+    margin: 20px 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, dl, dt, dd, table, th, td, form, fieldset, legend, input, textarea, button, select {
+    margin: 0;
+    padding: 0;
+}
+user agent stylesheet
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+ul, ol {
+    list-style: none;
+}
+user agent stylesheet
+ul {
+    list-style-type: disc;
+}
+body, input, textarea, select, button, table {
+    font-family: Helvetica, '나눔고딕', 'Nanum Gothic', '나눔스퀘어', 'Nanum Square', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;
+    font-size: 12px;
+    line-height: 1.5em;
+}
+style attribute {
+    --color-picker: #194e92;
+}
+:root {
+    --color-picker: #194e92;
+}

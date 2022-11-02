@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+     <!-- namespace="패키지명.인터페이스" -->
+     <mapper namespace="spring.mvc.pj_117_kys.dao.BoardDAO"> 
+   		<!--  
+   			게시판 목록 
+   			CDATA : Character Data [면접]
+   			![CDATA[sql문]] : CDATA 안에 작성된 특수문자 데이터(등호 부등호)는 XML이 아닌 단순한 문자 데이터로 인식하게 한다
+   			마이바티스는 혼동을 하기 때문에 명시하여 XML 파서기가 처리하지 않고 데이터베이스에 그대로 전달한다
+   		-->
+   		<select id="boardList" parameterType="java.util.Map" resultType="spring.mvc.pj_117_kys.dto.BoardDTO">
+   			<![CDATA[
+   			SELECT * FROM 
+   				(SELECT A.*, rownum AS rn 
+   					FROM (SELECT num, title, content, writer, password, readCnt, regDate, 
+							(SELECT count(*) FROM mvc_board_comment_tbl 
+								WHERE board_num = b.num) comment_count
+									FROM mvc_board_tbl b
+								WHERE show='y'
+								ORDER BY num DESC) 
+							A) 
+			WHERE rn >= #{start} AND rn <= #{end}
+			]]>
+   		</select>
+   		
+   		<!-- 게시글 개수 -->
+   		<select id="boardCnt"  resultType="int">
+   			SELECT count(*) as cnt FROM mvc_board_tbl
+   		</select>
+   		
+   		<!-- 조회수 증가 -->
+   		<update id="plusReadCnt" parameterType="int">
+   			update mvc_board_tbl set readCnt=readCnt+1 where num=#{num}
+   		</update>
+   		
+   		<!-- 게시글 상세페이지 -->
+   		<select id="getBoardDetatil" parameterType="int" resultType="spring.mvc.pj_117_kys.dto.BoardDTO">
+   			SELECT * FROM mvc_board_tbl where num=#{num}
+   		</select>
+   		
+   		<!-- 게시글 작성 -->
+   		<insert id="boardInsert" parameterType="spring.mvc.pj_117_kys.dto.BoardDTO">
+   			INSERT INTO mvc_board_tbl(num, title, content, writer, password, readCnt, regDate) 
+			VALUES((SELECT NVL(max(num)+1, 1) FROM mvc_board_tbl), #{title}, #{content}, #{writer}, #{password}, #{readCnt}, sysdate)
+   		</insert>
+   		
+   		<!-- 게시글 비밀번호 인증 -->
+   		<select id="password_chk" parameterType="java.util.Map" resultType="String">
+   			SELECT * FROM mvc_board_tbl where num=#{num} and password=#{password}
+   		</select>
+   		
+   		<!-- 게시글 수정 -->
+   		<update id="boardUpdate" parameterType="spring.mvc.pj_117_kys.dto.BoardDTO">
+   			update mvc_board_tbl set title=#{title}, content=#{content}, password=#{password} 
+   			where num=#{num}
+   		</update>
+   		
+   		<!-- 게시글 숨기기 -->
+   		<update id="boardDelete" parameterType="int">
+   			update mvc_board_tbl set show='n' where num=#{num}
+   		</update>
+   		
+   		<!-- 댓글 목록 -->
+   		<select id="commentList" parameterType="int" resultType="spring.mvc.pj_117_kys.dto.BoardCommentDTO">
+   			SELECT * FROM mvc_board_comment_tbl 
+   			WHERE BOARD_NUM = #{BOARD_NUM} 
+   			ORDER BY COMMENT_NUM
+   		</select>
+   		
+   		<!-- 댓글 작성 -->
+   		<insert id="commentInsert" parameterType="spring.mvc.pj_117_kys.dto.BoardCommentDTO">
+   			INSERT INTO mvc_board_comment_tbl(comment_num, board_num, writer, content, reg_Date)  
+			VALUES ((SELECT NVL(Max(comment_num)+1,1) FROM mvc_board_comment_tbl), #{board_num}, #{writer}, #{content}, sysdate)
+   		</insert>
+     </mapper>

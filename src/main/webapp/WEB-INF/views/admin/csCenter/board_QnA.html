@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- 반응형웹  적용 -->
+<meta name="viewport" content="width=device-width, initial-scale-1">
+<title>관리자 - 게시판QnA</title>
+
+<link rel="stylesheet" href="../../resources/css/commonCss/header.css">
+<link rel="stylesheet" href="../../resources/css/commonCss/footer.css">
+<link rel="stylesheet" href="../../resources/css/adminCss/admin.css">
+
+<!-- 1. fontawesome.com에서 인증(start for free) 2. 이미지 사용가능 -->
+<script src="https://kit.fontawesome.com/980ab78713.js" crossorigin="anonymous"></script>
+
+<!-- 자바스크립트 이벤트 추가 : 햄버거 버튼을 클릭하면 아래쪽으로 메뉴가 나오도록 main.js에서 추가 -->
+<!-- defer : 모든 html 파일을 로딩할 때가지 html이 브라우저창에 표시가 안 되는 것을 방지 -->
+<script src="../resources/js/customerJs/main.js" defer></script>
+<!-- CSS > cdn : 해당 사이트에서 실시간 다운 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-skyblue">
+  <div class="container-fluid">
+  	<a class="navbar-brand" href="../../common/main.html"><i class="fa fa-ice-cream"></i> SangHaFarm </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="../../common/main.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../../customer/product/showAll.html">Products</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Category
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="../product/product_category1.html">유기농 아이스크림</a></li>
+            <li><a class="dropdown-item" href="../product/product_category2.html">얼려먹는 아이스크림</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="../product/product_categoryAll.html">더보기</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           	 Board	
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="boardList.html">게시판</a></li>
+            <li><a class="dropdown-item" href="../review/reviewList.html">Review</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="board_QnA.html">Q&A</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      <ul class="navbar_icons">
+		<li><a href="../../customer/login/login.html">LOGIN</a></li>
+		<li><a href="../../customer/join/join.html">JOIN</a></li>
+		<li><a href="../../customer/mypage/cart/cartList.html"><i
+			class="fa fa-cart-plus"></i></a></li>
+		<li><a href="../../customer/mypage/info/myInfo.html"><i
+			class="fa fa-user"></i></a></li>
+	   </ul> 
+    </div>
+  </div>
+</nav>
+		<header>
+		<br>
+            <h1 class="site-heading text-center">
+               <span class="site-heading-upper text-primary mb-3"><img style="width:200px" src="../../resources/css/images/logo.JPG" class="_1QhZSUVBeK" alt="상하목장"></span>
+                <span class="site-heading-lower"></span>
+            </h1>
+        </header>
+		<!-- header 끝 -->
+
+		<!-- 컨텐츠 시작 -->
+<!-- 상품목록 컨텐츠 시작 -->
+   <div id="container">
+      <div id="contents">
+         <!-- 상단 중앙1 시작 -->
+         <div id="section1">
+            <h1 align="center"></h1>
+         </div>
+         
+         <!-- 상단 중앙2 시작 -->
+         <div id="section2">
+            <!-- 좌측메뉴 시작 -->
+            <div id="left">
+            	<div class="Left_inside">
+            		<!-- 좌측메뉴바 시작 -->
+            		<ul class="menubarLeft">
+            			<li><h4>관리자 메뉴</h4></li>
+            			<hr>
+            			<li>
+            				<h4>재고 관리</h4>
+            				<ul class="product_menu">
+            					<li><a href="../product/productList.html">상품목록</a></li>
+            					<li><a href="../product/product_add.html">상품등록</a></li>
+            					<li><a href="../product/product_upt.html">상품수정</a></li>
+            					<li><a href="../product/product_del.html">상품삭제</a></li>
+            				</ul>
+            			</li>
+            			<li>
+            				<h4>주문 관리</h4>
+            				<ul class="order_menu">
+            					<li><a href="../order/orderList.html">주문요청</a></li>
+            					<li><a href="../order/order_confirm.html">주문승인</a></li>
+            					<li><a href="../order/order_cancel.html">주문취소</a></li>
+            				</ul>
+            			</li>
+            			<li>
+            				<h4>환불 관리</h4>
+            				<ul class="refund_menu">
+            					<li><a href="../refund/refundList.html">환불요청</a></li>
+            					<li><a href="../refund/refund_confirm.html">환불승인</a></li>
+            					<li><a href="../refund/refund_cancel.html">환불취소</a></li>
+            				</ul>
+            			</li>
+            			<li>
+            				<h4>회원 관리</h4>
+            				<ul class="member_menu">
+            					<li><a href="../member/memberList.html">회원목록</a></li>
+            					<li><a href="../member/memberWithdraw.html">탈퇴요청</a></li>
+            					<li><a href="../member/withdraw_confirm.html">탈퇴승인</a></li>
+            					<li><a href="../member/withdraw_cancel.html">탈퇴취소</a></li>
+            				</ul>
+            			</li>
+            			<li>
+            				<h4>게시판</h4>
+            				<ul class="board_menu">
+            					<li><a href="boardList.html">게시판목록</a></li>
+            					<li><a href="board_add.html">게시글추가</a></li>
+            					<li><a href="board_upt.html">게시글수정</a></li>
+            					<li><a href="board_del.html">게시글삭제 </a></li>
+            					<li><a href="board_category.html">카테고리</a></li>
+            				</ul>
+            			</li>
+            			<li>
+            				<h4>리뷰 관리</h4>
+            				<ul class="review_menu">
+            					<li><a href="../review/reviewList.html">리뷰목록</a></li>
+            					<li><a href="../review/review_confirm.html">리뷰승인</a></li>
+            					<li><a href="../review/review_cancel.html">리뷰취소</a></li>
+            				</ul>
+            			</li>
+            			<li>
+            				<h4>결산</h4>
+            				<ul class="sell_menu">
+            					<li><a href="../sell/sell.html">총 결산</a></li>
+            					<li><a href="../sell/customer_sell.html">고객별 결산</a></li>
+            				</ul>
+            			</li>
+            			<li><h4>로그아웃<a href="../../customer/logout.html"></a></h4></li>			
+            		</ul>
+            		<!-- 좌측메뉴바 종료 -->
+            	</div>
+            </div>
+            <!-- 좌측메뉴 종료 -->
+            
+            <!-- 우측메뉴 시작 -->
+            <div id="right" class="_1t0Ks-Zj9a" style="margin-top: 100px;">
+            	<div class="table_div">
+            		<div align="right">
+            			<input type="button" value="게시판" onclick="location.href='boardList.html'">
+            			<input type="button" value="리뷰" onclick="location.href='../review/reviewList.html'">
+            			<input type="button" value="QnA" onclick="location.href='board_QnA.html'">
+            			<br>
+            		</div>
+            		<h3>QnA</h3>
+            		구매하시려는 상품에 대해 궁금한 점이  있으신 경우 문의해주세요.
+            		<div align="right">
+            			<input type="button" class="_1h8gH51Art N=a:qna.write" value="상품 QnA 작성하기">
+            			<input type="button" class="_1h8gH51Art N=a:qna.write" value="나의 QnA 조회">
+            			<br>
+            		</div>
+            		<table style="width: 1000px" align="center">
+            			<tr>
+            				<th style="width: 5%">번호</th>
+            				<th style="width: 10%">답변상태</th>
+            				<th style="width: 20%">제목</th>
+            				<th style="width: 30%">내용</th>
+            				<th style="width: 10%">작성자</th>
+            				<th style="width: 15%">작성일</th>
+            			</tr>
+            			<!-- 하드코딩이지만 DB에서 읽어올 것 -->
+            			<tr>
+            				<td>4</td>
+            				<td>답변완료</td>
+            				<td>원유 함량이 몇프로인가요?</td>
+            				<td>
+            					상하목장 유기농 아이스크림 제품은 유기농 농축우유 50%(원유 100%), 유기농 우유 12.7% 함유하고 있사오니, 이용에 참고부탁드립니다.
+            				</td>
+            				<td>kim</td> 
+            				<td>2022.08.04</td>
+            			</tr>
+            			<tr>
+            				<td>3</td>
+            				<td>답변완료</td>
+            				<td>생후 몇 개월부터 먹을 수 있을까요?</td>
+            				<td>
+            					해당제품은, 다양한 음식물 섭취 경험을 하게 되는 아이 월령 만 36개월 이상 권유드립니다.
+            					다만, 제품에 사용된 원재료에 따른 알러젠 등은 개인에 따라 차이가 있으니 아이 월령 만 36개월 이후라도 상세정보 하단에 원재료를 확인하신 후 이용 부탁드립니다.
+            				</td>
+            				<td>you</td> 
+            				<td>2022.08.05</td>
+            			</tr>
+            			<tr>
+            				<td>2</td>
+            				<td>답변 완료</td>
+            				<td>배송출발이 늦어요 아이스크림 다 녹아서 오는거 아니에요?</td>
+            				<td>
+            					먼저 배송지연과 관련하여 고객님께 불편드린 점 사과드립니다.
+            					해당 주문상품은 이미 출고되었으나 배송흐름이 없는 것으로 확인됩니다.
+            					따라서 택배사 분실로 추정되어 재출고 접수를 하였습니다.
+            					배송완료까지 약 2-3일 정도의 시일이 걸릴 수 있다는 점 양해부탁드립니다.
+            				</td>
+            				<td>lee</td>
+            				<td>2022.08.12</td>            				
+            			</tr>
+            			<tr>
+            				<td>1</td>
+            				<td>답변완료</td>
+            				<td>큰 거보다 미니컵 4개가 더 비싼가요?</td>
+            				<td>
+            					고객님께 뜻하지 않은 불편을 드리게 되어 죄송합니다.
+            					제품마다의 판매가격은 같은 상품이라하더라도 판매 시기에 따라 수량, 증정품, 구성사항 등 가격 차이가 발생할 수 있는 점에
+            					고객님의 너그러운 양해 부탁드립니다.
+            					보다 좋은 가격 혜택으로 찾아뵐 수 있도록 최선을 다하겠습니다.
+            				</td>
+            				<td>jin</td>
+            				<td>2022.08.12</td>        
+            			</tr>
+            			<tr>
+            				<td colspan="5">
+            					<input type="button" name="board_add" value="추가하기" onclick="location.href='board_add.html'">
+            					<input type="button" name="board_upt" value="수정하기" onclick="location.href='board_upt.html'">
+            					<input type="button" name="board_del" value="삭제하기" onclick="location.href='board_del.html'">
+            				</td>
+            			</tr>
+            		</table>
+            	</div>
+            </div>
+            <!-- 우측메뉴 종료 -->
+         </div> <!-- sections -->
+      </div> <!-- contents -->
+   </div> <!-- container -->
+   <!-- 상품목록 컨텐츠 종료 -->
+		
+		<!-- 컨텐츠 종료 -->
+
+		<!-- footer 시작 -->
+	<div id="footer" role="contentinfo">
+		<ul>
+			<li><a href="#">이용약관</a></li>
+			<li><strong><a href="#">개인정보처리방침</a></strong></li>
+			<li><a href="#">책임의 한계와 법적고지</a></li>
+			<li><a href="#" target="_blank">회원정보 고객센터 </a></li>
+		</ul>
+		<address>
+			<em><a href="#" target="_blank" class="logo"><span
+					class="blind">Maeil</span></a></em> <em class="copy">Copyright</em> <em
+				class="u_cri">©</em> <a href="#" target="_blank" class="u_cra">Maeil Corp.</a> <span class="all_r">All Rights Reserved.</span>
+		</address>
+	</div>
+	<!-- footer 끝 -->
+
+</body>
+</html>

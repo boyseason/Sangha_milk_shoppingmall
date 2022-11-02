@@ -1,0 +1,133 @@
+@charset "UTF-8";
+
+body {
+   height: 100%;
+   width: 100%;
+   margin: 0;   
+}
+
+a {
+   color: white;
+   text-decoration: none;
+}
+
+._14Ezl7R3c- ._3aNsjos9K5 {
+    position: relative;
+    padding: 50px 0 22px;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+body, input, textarea, select, button, table {
+    font-family: Helvetica, '나눔고딕', 'Nanum Gothic', '나눔스퀘어', 'Nanum Square', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;
+    font-size: 12px;
+    line-height: 1.5em;
+}	
+/*--- navbar 시작 ----------------------------- */
+.navbar {
+	background-color: skyblue;
+    font-family: Helvetica, '나눔고딕', 'Nanum Gothic', '나눔스퀘어', 'Nanum Square', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;
+    font-size: 18px;
+    padding-right: 35px;
+    padding: 40px 40px;
+    list-style: none;
+    position: relative;
+}
+
+
+.navbar_title {
+   list-style: none;  /* 리스트 불릿 없앰 */
+   color: #f0f4f5;
+   display: flex;   /* 한줄(수평)로 배치 */
+   padding-left: 10px;
+}
+
+.navbar_menu {
+   display: flex;   /* 한줄(수평)로 배치 */
+   list-style: none; /* 리스트 불릿 없앰 */
+   padding-left: 0;
+   font-weight: bold;
+   font-size: 20px;
+}
+
+.navbar_menu li {
+   padding: 8px 30px;
+}
+
+.navbar_menu li:hover { /* 마우스 올렸을 때*/
+   background-color: #efc2d3;
+   border-radius: 4px;
+}
+
+.navbar_icons {
+   margin: 0;
+   display: flex;   /* 한줄(수평)로 배치 */
+   list-style: none; /* 리스트 불릿 없앰 */
+   color: white;
+   padding-left: 0;
+}
+
+.navbar_icons li {
+   padding: 8px 15px;
+}
+
+.navbar_icons li:hover { /* 마우스 올렸을 때*/
+   background-color: #efc2d3;
+   border-radius: 4px;
+}
+
+/*--- navbar 종료----------------------------- */
+
+/* 반응형웹2 햄버거 아이콘 맨 오른쪽 배치 */
+.navbar_toggleBtn{
+	display: none; /* 768px보다 작은 경우에 표시 */
+	position: absolute;
+	right: 32px;
+	font-size: 24px;
+	color: #d49466;
+}
+
+
+/* 반응형웹3 미디어쿼리 */
+@media screen and (max-width: 768px){
+	/* 창을 줄이면 세로로 보여주기 */
+	.navbar_toggleBtn{
+		display: block; 
+	}
+	.navbar{
+		flex-direction: column; /* 위 ~ 아래 아이템 배치 */
+		align-items: flex-start; /* 왼쪽에서 display 시작 */
+		padding: 8px 24px; /* 안쪽 여백 */
+	}
+	.navbar_menu{
+		display: none;
+		flex-direction: column;
+		/* width: 100%가 아닌채 center를 주면 자체너비가 작으므로 작동하지 않는다 */
+		align-items: center;
+		witdh: 100%;
+	}
+	
+	/* 마우스 올리면 하이라이트를 전체크기로 주기 */
+	.navbar_menu li{
+		width: 100%;
+		text-align: center;	
+	}
+	/* 아이콘 가운데 정렬 */
+	.navbar_icons{
+		display: none;
+		jusity-content: center;
+		width: 100%;
+	}
+	/* 자바스크립트 이벤트 추가 : 버튼 클릭 시 아래쪽으로 메뉴가 나오도록 */
+
+	/* 각 페이지마다 main.js  추가 */
+	
+	/* active 추가 */
+	/* 메뉴가 보여지고 페이지 이동 가능, 한번 더 누르면 메뉴  감춰진다 */
+	.navbar_menu.active, .navbar_icons.active{
+		display: flex;
+	}
+}
+
+

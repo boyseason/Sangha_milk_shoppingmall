@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+     <!-- namespace="패키지명.인터페이스" -->
+     <mapper namespace="spring.mvc.pj_117_kys.dao.CartDAO"> 
+   		
+   		<!-- 장바구니 목록 -->
+   		<select id="CartList" parameterType="String" resultType="spring.mvc.pj_117_kys.dto.CartDTO">
+   			SELECT * FROM kys_cart_tbl ca 
+			join kys_customer_tbl cu on ca.id=cu.id
+			join kys_product_tbl p on p.pdNo = ca.pdNo 
+			where cu.id=#{id}
+   		</select>
+   		
+   		<!-- 장바구니 개수 확인 -->
+   		<select id="CartCnt" parameterType="String" resultType="int">
+   			SELECT COUNT(*) as cnt FROM kys_cart_tbl where id=#{id}
+   		</select>
+   		
+   		<!-- 장바구니 추가 -->
+   		<insert id="CartAdd" parameterType="spring.mvc.pj_117_kys.dto.CartDTO">
+   			INSERT INTO kys_cart_tbl(cartNo, id, pdNo, cartCnt, cartTotal)
+			VALUES((SELECT NVL(max(cartNo)+1, 1) FROM kys_cart_tbl), #{id}, #{pdNo}, #{cartCnt}, #{cartTotal})
+   		</insert>
+   		
+   		<!-- 장바구니 수정 -->
+   		<update id="CartUpdate" parameterType="spring.mvc.pj_117_kys.dto.CartDTO">
+   			UPDATE kys_cart_tbl SET cartCnt=#{cartCnt}, cartTotal=#{cartTotal} WHERE cartNo=#{cartNo}
+   		</update>
+   		
+   		<!-- 장바구니 삭제 -->
+   		<delete id="cartDelete" parameterType="int">
+   			DELETE FROM kys_cart_tbl WHERE cartNo=#{cartNo}
+   		</delete>
+   		
+   		<!-- 장바구니 전체 삭제 -->
+   		<delete id="cartDeleteAll" parameterType="String">
+   			DELETE FROM kys_cart_tbl WHERE id=#{id}
+   		</delete>
+   		
+   		<!-- 장바구니 중복 확인 -->
+   		<select id="cartExists" parameterType="java.util.Map" resultType="int">
+   			SELECT count(*) FROM kys_cart_tbl  WHERE pdNo=#{pdNo} and id=#{id}
+   		</select>
+   		
+     </mapper>

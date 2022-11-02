@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+     <!-- namespace="패키지명.인터페이스" -->
+     <mapper namespace="spring.mvc.pj_117_kys.dao.ProductDAO"> 
+   		<!-- 상품목록  -->
+   		<select id="productList" parameterType="java.util.Map" resultType="spring.mvc.pj_117_kys.dto.ProductDTO">
+   			<![CDATA[
+   			SELECT * FROM 
+   				(SELECT A.*, rownum AS rn 
+   					FROM (SELECT * FROM kys_product_tbl							
+							ORDER BY pdNo desc) 
+						 A) 
+			WHERE rn >= #{start} AND rn <= #{end}
+			]]>
+   		</select>
+   		
+   		<!-- 상품 개수 -->
+   		<select id="productCnt"  resultType="int">
+   			SELECT count(*) as cnt FROM kys_product_tbl
+   		</select>
+   		
+   		<!-- 상품 등록 -->
+   		<insert id="productInsert" parameterType="spring.mvc.pj_117_kys.dto.ProductDTO">
+   			INSERT INTO kys_product_tbl(pdNo, pdName, pdImg, category, brand, content, price, quantity, status, indate) 
+			VALUES((SELECT NVL(Max(pdNo)+1,1) FROM mvc_product_tbl), #{pdName}, #{pdImg}, #{category}, #{brand}, #{content}, #{price}, #{quantity}, #{status}, sysdate)
+   		</insert>
+   		
+   		<!-- 상품 상세 -->
+   		<select id="productDetail" parameterType="int" resultType="spring.mvc.pj_117_kys.dto.ProductDTO">
+   			SELECT * FROM kys_product_tbl where pdNo=#{pdNo}
+   		</select>
+   		
+   		<!-- 상품 수정 -->
+   		<update id="productUpdate" parameterType="spring.mvc.pj_117_kys.dto.ProductDTO">
+   			update kys_product_tbl 
+   			set pdName=#{pdName}, pdImg=#{pdImg}, category=#{category}, brand=#{brand}, content=#{content}, price=#{price}, quantity=#{quantity}, status=#{status} 
+   			where pdNo=#{pdNo}
+   		</update>
+   		
+   		<!-- 상품 삭제 -->
+   		<delete id="productDelete" parameterType="int">
+   			delete from kys_product_tbl where pdNo=#{pdNo}
+   		</delete>
+   		
+   		<!-- 상품 카테고리 -->
+   		<select id="productCategory" parameterType="String" resultType="spring.mvc.pj_117_kys.dto.ProductDTO">
+   			SELECT * FROM kys_product_tbl where category=#{category}
+   		</select>
+     </mapper>

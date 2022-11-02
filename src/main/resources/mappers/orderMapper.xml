@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+     <!-- namespace="패키지명.인터페이스" -->
+     <mapper namespace="spring.mvc.pj_117_kys.dao.OrderDAO"> 
+   		
+   		<!-- 주문 목록 (체크아웃) -->
+   		<select id="orderList" parameterType="String" resultType="spring.mvc.pj_117_kys.dto.OrderDTO">
+   			SELECT * FROM kys_order_tbl o 
+			join kys_customer_tbl cu on o.id=cu.id
+			join kys_product_tbl p on p.pdNo = o.pdNo 
+			where cu.id=#{id} ORDER BY orderNo desc
+   		</select>
+   		
+   		<!-- 주문 개수 확인 -->
+   		<select id="orderCnt" parameterType="String" resultType="int">
+   			SELECT COUNT(*) as cnt FROM kys_order_tbl where id=#{id}
+   		</select>
+   		
+   		<!-- 바로구매 주문 -->
+   		<insert id="orderAdd" parameterType="spring.mvc.pj_117_kys.dto.OrderDTO">
+   			INSERT INTO kys_order_tbl(orderNo, id, pdNo, orderCnt, orderTotal, orderDate)
+			VALUES((SELECT NVL(max(orderNo)+1, 1) FROM kys_order_tbl), #{id}, #{pdNo}, #{orderCnt}, #{orderTotal}, sysdate)
+   		</insert>
+   		
+   		<!-- 장바구니 선택 구매 -->
+   		<insert id="cartOrder" parameterType="java.util.Map">
+   			INSERT INTO kys_order_tbl(orderNo, id, pdNo, orderCnt, orderTotal)
+			VALUES((SELECT NVL(max(orderNo)+1, 1) FROM kys_order_tbl), 
+			#{id}, 
+			(SELECT pdNo FROM kys_cart_tbl where cartNo=#{cartNo}), 
+			(SELECT cartCnt FROM kys_cart_tbl where cartNo=#{cartNo}), 
+			(SELECT cartTotal FROM kys_cart_tbl where cartNo=#{cartNo}))
+   		</insert>   	 		
+   		
+   		<!-- 주문 전체 삭제 -->
+   		<delete id="orderDelete" parameterType="String">
+   			DELETE FROM kys_order_tbl WHERE id=#{id}
+   		</delete>  		   	
+   		
+   		<!-- 구매 목록 추가 -->
+   		<insert id="buyAdd" parameterType="java.util.Map">
+   			INSERT INTO kys_buy_tbl(buyNo, id, pdNo, buyCnt, buyTotal)
+			VALUES((SELECT NVL(max(buyNo)+1, 1) FROM kys_buy_tbl), 
+			#{id}, 
+			(SELECT pdNo FROM kys_order_tbl where orderNo=#{orderNo}), 
+			(SELECT orderCnt FROM kys_order_tbl where orderNo=#{orderNo}), 
+			(SELECT orderTotal FROM kys_order_tbl where orderNo=#{orderNo}))
+   		</insert>
+   		
+   		<!-- 구매 목록 카운트 -->
+   		<select id="buyCnt" parameterType="String" resultType="int">
+   			SELECT COUNT(*) as cnt FROM kys_buy_tbl where id=#{id}
+   		</select>
+   		
+   		<!-- 구매목록 -->
+   		<select id="buyList" parameterType="String" resultType="spring.mvc.pj_117_kys.dto.BuyDTO">
+   			SELECT * FROM kys_buy_tbl b 
+			join kys_customer_tbl cu on b.id=cu.id
+			join kys_product_tbl p on p.pdNo = b.pdNo 
+			where cu.id=#{id} ORDER BY buyNo desc
+   		</select>
+   		
+   		<!-- 관리자 주문관리 -->
+   		<select id="adminOrderList"  resultType="spring.mvc.pj_117_kys.dto.BuyDTO">
+   			SELECT * FROM kys_buy_tbl b 
+			join kys_customer_tbl cu on b.id=cu.id
+			join kys_product_tbl p on p.pdNo = b.pdNo 
+			ORDER BY buyNo desc
+   		</select>
+   		
+   		<!-- 구매 목록 삭제 -->
+   		<delete id="buyDelete" parameterType="int">
+   			DELETE FROM kys_buy_tbl WHERE buyNo=#{buyNo}
+   		</delete>
+   		
+   		<!-- 구매 승인 > 구매 완료 (관리자) -->
+   		<update id="buyConfirm" parameterType="int">
+   			update kys_buy_tbl set buyState='구매완료' WHERE buyNo=#{buyNo}
+   		</update>
+   		
+   		<!-- 구매완료 > 환불 요청 (고객) -->
+   		<update id="buyRefund" parameterType="int">
+   			update kys_buy_tbl set buyState='환불요청' WHERE buyNo=#{buyNo}
+   		</update> 
+   		
+   		<!-- 환불 요청 > 환불 승인 (관리자) -->
+   		<update id="confirmRefund" parameterType="int">
+   			update kys_buy_tbl set buyState='환불승인' WHERE buyNo=#{buyNo}
+   		</update> 
+   		
+   		<!-- 결산 (판매날짜, 판매건, 판매액) -->
+   		<select id="soldView"  resultType="spring.mvc.pj_117_kys.dto.SoldDTO">
+   			select * from sold_view
+   		</select> 
+     </mapper>

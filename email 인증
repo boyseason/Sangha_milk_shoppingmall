@@ -1,0 +1,194 @@
+1. pom.xml에 추가
+
+<!-- Java Mail API : 이메일 인증-->-->
+<dependency>
+    <groupId>javax.mail</groupId>
+    <artifactId>mail</artifactId>
+    <version>1.4.7</version>
+</dependency>
+
+<dependency>
+    <groupId>com.sun.mail</groupId>
+    <artifactId>javax.mail</artifactId>
+    <version>1.5.6</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context-support</artifactId>
+    <version>4.1.6.RELEASE</version>
+</dependency>
+<!-- Java Mail API -->
+
+
+2. servlet-context.xml에 추가
+
+   <!-- mail bean(이메일 인증) -->
+    <beans:bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <beans:property name="host" value="smtp.gmail.com" />
+        <beans:property name="port" value="587" />
+        <beans:property name="username" value="xxxx@gmail.com" />
+        <beans:property name="password" value="xxxxxxx" />
+        <beans:property name="javaMailProperties">
+            <beans:props>
+                <beans:prop key="mail.smtp.ssl.trust">smtp.gmail.com</beans:prop>
+                <beans:prop key="mail.smtp.starttls.enable">true</beans:prop>
+                <beans:prop key="mail.smtp.auth">true</beans:prop>
+            </beans:props>
+        </beans:property>
+    </beans:bean>
+
+
+3. 구글사이트 설정 : 보안 => [보안 수준이 낮은 앱의 액세스] : [확인]으로 변경
+
+4.
+4-1. [spring.mvc.pj_117.util.EmailChkHandler.java]
+
+package spring.mvc.pj_117.util;
+
+import java.util.Random;
+
+public class EmailChkHandler {
+
+   public static String getKey() {
+      // 인증키 부분(랜덤 문자)
+      StringBuffer temp = new StringBuffer();
+      Random rnd = new Random();
+      for(int i=0; i<6; i++) {
+         int rIndex = rnd.nextInt(2);
+         switch(rIndex) {
+         case 0 :
+            // A-Z
+            temp.append((char) ((int) (rnd.nextInt(26)) + 65));
+            break;
+         case 1:
+            // 0-9
+            temp.append((rnd.nextInt(10)));
+            break;
+         }
+      }
+      
+      return temp.toString();
+   }
+   
+}
+
+4-2. [spring.mvc.pj_117.util.SettingValues.java]
+
+package spring.mvc.pj_117.util;
+
+public interface SettingValues {
+   // 이메일 계정정보
+   public static String ADMIN = "";  // 본인 이메일 계정
+   public static String PW = "";  // 본인 이메일 패스워드
+   
+}
+
+  
+5.  CustomerDAO / CustomerDAOImpl.java => 구글 이메일 화면 작성     
+
+// 시큐리티 - 가입성공시 이메일인증을 위해 이메일 전송
+   @Override
+   public void sendEmail(String email, String key) {
+      final String username = SettingValues.ADMIN;      // 본인 이메일
+      final String password = SettingValues.PW;      // 본인 비밀번호
+      final String host = "smtp.gmail.com";
+      
+      // SMTP(메일 서버) 설정
+      
+      // 아래 import는 pom.xml에 mail API를 설정해야 가능
+      // import java.util.Properties;
+      Properties props = new Properties();         
+      props.put("mail.smtp.user", username);         // SMTP에서 사용할 메일 주소
+      props.put("mail.smtp.password", password);      // 비밀번호
+      props.put("mail.smtp.host", host);            // host 서버 : gmail로 설정
+      props.put("mail.smtp.port", "25");            // 25번 포트 사용
+      props.put("mail.debug", "true");            // 디버그 설정
+      props.put("mail.smtp.auth", "true");         // 인증 : true
+      props.put("mail.smtp.starttls.enable", "true");   // tls 사용 허용
+      props.put("mail.smtp.ssl.enable", "true");      // ssl 허용
+      props.put("mail.smtp.ssl.trust", host);         // ssl 신뢰 가능으로 설정(보안레벨)
+      
+      // propert값 설정
+      props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");   
+      props.setProperty("mail.smtp.socketFactory.fallback", "false");
+      props.setProperty("mail.smtp.port", "465");
+      props.setProperty("mail.smtp.socketFactory.port", "465");
+      
+      // import javax.mail.Session;
+      // import javax.mail.Authenticator
+      // import javax.mail.PasswordAuthentication
+      Session session = Session.getInstance(props, new Authenticator() {
+         protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+         }
+      });
+      
+      // import javax.mail.Message
+      // import javax.mail.internet.MimeMessage;
+      // import javax.mail.internet.InternetAddress;
+      // import javax.mail.Transport
+      
+      // emailChk.do를 컨트롤러에 작성
+      try {
+         Message message = new MimeMessage(session);
+         message.setFrom(new InternetAddress("admin@CosmoJspPJ.com"));
+         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+         
+         // localhost => 본인 IP => 원격 발표시 IP 수정
+         // 링크를 클릭해서 "이메일 인증 성공" => enabled를 1로 update함
+         String content ="회원가입을 축하드립니다. 링크를 눌러 회원가입을 완료하세요."
+                     + "<a href='http://localhost/pj_117/emailChk.do?key=" + key + "'>링크</a>";
+         message.setSubject("회원가입 인증 메일");
+         message.setContent(content, "text/html; charset=utf-8");
+         
+         Transport.send(message);
+         System.out.println("<<<< Email SEND >>>>");
+      } catch(Exception e) {
+         e.printStackTrace();
+      }   
+   }
+  
+  
+6. CustomerController.java
+
+   // 시큐리티 - 가입성공시 이메일인증을 위해 이메일 전송 
+   // CustomerDAOImpl의 sendEmail(String email, String key)에서 호출
+   @RequestMapping("emailChk.do")
+   public String emailChk(HttpServletRequest req,  Model model) {
+      logger.info("[url ==> emailChk.do]");
+      
+      return "customer/join/emailChkAction";
+   }  
+   
+   
+7. WEB-INF/views/customer/join/emailChkAction.jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/setting.jsp" %>    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- 반응형웹 -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>중복확인 페이지</title>
+<link rel="stylesheet" href="${path}/resources/css/customerCss/confirmIdAction.css">
+<script src="${path}/resources/js/customerJS/errorMsg.js"></script>
+
+</head>
+<body>
+   <c:if test="${insertCnt == 0}">
+      <script type="text/javascript">
+         errorAlert("이메일 인증 실패!!");
+      </script>
+   </c:if>
+   
+   <c:if test="${insertCnt != 0}">
+      <script type="text/javascript">
+         errorAlert("이메일 인증 성공!!");
+         window.location="login.do";
+      </script>
+   </c:if>
+</body>
+</html>   
